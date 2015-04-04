@@ -2,3 +2,19 @@
 {% block content %}
     <h1>Login</h1>
 {% endblock %}
+{% block userid %}
+    {% if homestar_configured %}
+        <div class="text-right">
+            {% if user %}
+        <p>
+        <a href="{{ settings().urls.userid }}">{{ user.username }}</a>
+        </p>
+                {% else %}
+        <p>
+        <a href="{{ settings().urls.homestar.login }}">Sign in with HomeStar</a>
+        </p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+

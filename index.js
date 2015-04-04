@@ -36,12 +36,18 @@ exports.web = {
 
         /* force logins */
         _.d.set(homestar.settings, "/webserver/require_login", true);
-        _.d.set(homestar.settings, "/webserver/urls/login", "/admin/log/in");
+        _.d.set(homestar.settings, "/urls/login", "/admin/log/in");
+        _.d.set(homestar.settings, "/urls/userid", "/admin/");
 
         app.get("/admin/log/in", homestar.make_dynamic({
             template: path.join(__dirname, "dynamic/login.html"),
             customize: access.login,
             require_login: false,
+        }));
+        app.get("/admin", homestar.make_dynamic({
+            template: path.join(__dirname, "dynamic/admin.html"),
+            // customize: access.login,
+            require_login: true,
         }));
     },
     locals: {
