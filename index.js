@@ -46,7 +46,12 @@ exports.web = {
         }));
         app.get("/admin", homestar.make_dynamic({
             template: path.join(__dirname, "dynamic/admin.html"),
-            // customize: access.login,
+            customize: access.login,
+            require_login: true,
+        }));
+        app.get("/admin/users", homestar.make_dynamic({
+            template: path.join(__dirname, "dynamic/users.html"),
+            customize: access.users,
             require_login: true,
         }));
     },
