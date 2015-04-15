@@ -25,10 +25,29 @@
 /**
  *  Users are redirected to this page when not logged in
  */
-var login = function(request, response, locals) {
+var login = function(request, response, locals, done) {
+    done(null);
+};
+
+/**
+ *  List users
+ */
+var users = function(request, response, locals, done) {
+    var homestar = require('./index').homestar;
+    locals.users = [];
+
+    homestar.users.users(function(user) {
+        if (user) {
+            locals.users.push(user);
+        } else {
+            console.log("USERS", locals.users);
+            done(null);
+        }
+    });
 };
 
 /**
  *  Exports
  */
 exports.login = login;
+exports.users = users;
