@@ -1,0 +1,37 @@
+{% extends 'template' %}
+{% block content %}
+    <h1>Admin</h1>
+    <p>
+    This is the Admin Home Page
+    </p>
+    {% if not user.identity %}
+    {% elseif user.is_owner %}
+    <p>
+    Hail the owner!
+    <br />
+    <code>{{ user.identity }}</code>
+    {% elseif user.is_known %}
+    <p>
+    I recognize you. Please enter
+    <br />
+    <code>{{ user.identity }}</code>
+    {% else %}
+    <p>
+    I don't know who you are
+    <br />
+    <code>{{ user.identity }}</code>
+    {% endif %}
+    {# <pre>{{ user|json(2)|safe }}</pre> #}
+
+    <p>
+    <ul>
+        <li>
+        <a href="{{ urls.logout }}">logout</a>
+        </li>
+        <li>
+        <a href="./users">users</a>
+        </li>
+    </ul>
+    {# <pre> {{ settings().urls|json(2)|safe }} </pre> #}
+
+{% endblock %}
