@@ -48,6 +48,16 @@ var list_users = function(request, response, locals, done) {
 
     homestar.users.users(function(error, user) {
         if (error) {
+            locals.users.sort(function(a, b) {
+                if (a.username < b.username) {
+                    return -1;
+                } else if (b.username < a.username) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+
             done(error);
         } else if (user) {
             locals.users.push(user);
@@ -103,7 +113,20 @@ var edit_user = function(request, response, locals, done) {
                 updated['iot:access.group'] = new_groups;
             }
 
-            return done(null, "/admin/users");
+            if (!_.is.Empty(updated)) {
+                _.extend(user, updated);
+
+                homestar.users.update(user, function(error) {
+                    if (error) {
+                        return done(error);
+                    } else {
+                        return done(null, "/admin/users");
+                    }
+                });
+                return;
+            } else {
+                return done(null, "/admin/users");
+            }
         }
 
         return done(null);

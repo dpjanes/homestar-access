@@ -5,9 +5,17 @@
     {% for user in users %}
         <li>
             <a href="/admin/users/{{ user.id }}">{{ user.username }}</a>
-            <br />
-            <code>{{ user.identity }}</code>
-            <pre>{{ user|json(2)|safe }}</pre>
+            {% if user.is_owner %}
+            <div>
+                <b>Owner:</b> it's you!
+            </div>
+            {% endif %}
+            <div>
+                <b>Identity:</b> {{ user.identity }}
+            </div>
+            <div>
+                <b>Groups:</b> {{ user["iot:access.group"] }}
+            </div>
         </li>
     {% endfor %}
     </ul>
