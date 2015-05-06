@@ -50,12 +50,12 @@ exports.web = {
             require_login: true,
         }));
         app.get("/admin/users/:user_id", homestar.make_dynamic({
-            template: path.join(__dirname, "dynamic/user_edit.html"),
+            template: path.join(__dirname, "dynamic/edit_user.html"),
             require_login: true,
             customize: access.edit_user,
         }));
         app.post("/admin/users/:user_id", homestar.make_dynamic({
-            template: path.join(__dirname, "dynamic/user_edit.html"),
+            template: path.join(__dirname, "dynamic/edit_user.html"),
             require_login: true,
             customize: access.edit_user,
         }));
