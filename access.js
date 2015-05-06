@@ -22,6 +22,8 @@
 
 "use strict";
 
+var index = require('./index');
+
 /**
  *  Users are redirected to this page when not logged in
  */
@@ -40,9 +42,38 @@ var users = function(request, response, locals, done) {
         if (user) {
             locals.users.push(user);
         } else {
-            console.log("USERS", locals.users);
             done(null);
         }
+    });
+};
+
+var _map_group = function(group) {
+    return {
+        value: group,
+        name: group,
+        selected: this.indexOf(group) > -1,
+    }
+};
+
+/**
+ *  Edit one user
+ */
+var user = function(request, response, locals, done) {
+    var homestar = index.homestar;
+
+    locals.user_id = request.params.user_id;
+
+    homestar.users.user_by_id(locals.user_id, function(error, user) {
+        if (error) {
+            return done(error);
+        } else if (!user) {
+            return done(new Error("user not found"));
+        }
+
+        locals.user_groups = _.ld.list(user, 'iot:access.groups', homestar.data.default_groups());
+        locals.groups = _.map(homestar.data.groups(), _map_group, locals.metadata_groups);
+
+        return done(null);
     });
 };
 
@@ -51,3 +82,4 @@ var users = function(request, response, locals, done) {
  */
 exports.login = login;
 exports.users = users;
+exports.user = user;
