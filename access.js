@@ -85,8 +85,26 @@ var edit_user = function(request, response, locals, done) {
         }
 
         locals.edit_user = user;
-        locals.user_groups = _.ld.list(user, 'iot:access.groups', homestar.data.default_groups());
+        locals.user_groups = _.ld.list(user, 'iot:access.group', homestar.data.default_groups());
         locals.groups = _.map(homestar.data.groups(), _map_group, locals.user_groups);
+
+        if (request.method === "POST") {
+            var updated = {};
+
+            /*
+            var name = request.body['schema:name']
+            if (name && name.length && name != locals.metadata['schema:name']) {
+                updated['schema:name'] = name;
+            }
+             */
+
+            var new_groups = _.ld.list(request.body, 'iot:access.group', []);
+            if (!_.equals(locals.user_groups, new_groups)) {
+                updated['iot:access.group'] = new_groups;
+            }
+
+            return done(null, "/admin/users");
+        }
 
         return done(null);
     });
