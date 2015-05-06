@@ -21,13 +21,15 @@ fieldset[disabled] .select2-search input[type=text] {
 {% block content %}
 
     <h1>User</h1>
-    {#
     <p>
-    {{ thing_id }}
+    This controls what <b>groups</b> the user belongs to.
+    This will determine what Things the user get see and/or control.
     </p>
-    #}
-    <h2>Edit</h2>
-    
+    {% if edit_user.is_owner %}
+    <p>
+    N.B. this user is you, the Owner, and can always see and control everything!
+    </p>
+    {% endif %}
 <form 
     role="form"
     class="form-horizontal" 
@@ -38,7 +40,7 @@ fieldset[disabled] .select2-search input[type=text] {
 
 {% include "form_h_select.html" %}
 
-{{ form_h_select({ key: "iot:facet", value: metadata_facets, multiple: true, label: "Facets", choices: facets, errors: null }) }}
+{{ form_h_select({ key: "iot:access.group", value: user_groups, multiple: true, label: "Groups", choices: groups, errors: null }) }}
 
 <!-- Button -->
 <div class="form-group">

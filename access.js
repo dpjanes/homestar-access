@@ -22,6 +22,9 @@
 
 "use strict";
 
+var iotdb = require('iotdb');
+var _ = iotdb._;
+
 var index = require('./index');
 
 /**
@@ -34,12 +37,19 @@ var login = function(request, response, locals, done) {
 /**
  *  List users
  */
-var users = function(request, response, locals, done) {
+var list_users = function(request, response, locals, done) {
     var homestar = require('./index').homestar;
+
+    if (!request.user.is_owner) {
+        return done(new Error("only the Owner can list users"));
+    }
+
     locals.users = [];
 
-    homestar.users.users(function(user) {
-        if (user) {
+    homestar.users.users(function(error, user) {
+        if (error) {
+            done(error);
+        } else if (user) {
             locals.users.push(user);
         } else {
             done(null);
@@ -58,8 +68,12 @@ var _map_group = function(group) {
 /**
  *  Edit one user
  */
-var user = function(request, response, locals, done) {
+var edit_user = function(request, response, locals, done) {
     var homestar = index.homestar;
+
+    if (!request.user.is_owner) {
+        return done(new Error("only the Owner can edit users"));
+    }
 
     locals.user_id = request.params.user_id;
 
@@ -70,8 +84,9 @@ var user = function(request, response, locals, done) {
             return done(new Error("user not found"));
         }
 
+        locals.edit_user = user;
         locals.user_groups = _.ld.list(user, 'iot:access.groups', homestar.data.default_groups());
-        locals.groups = _.map(homestar.data.groups(), _map_group, locals.metadata_groups);
+        locals.groups = _.map(homestar.data.groups(), _map_group, locals.user_groups);
 
         return done(null);
     });
@@ -81,5 +96,5 @@ var user = function(request, response, locals, done) {
  *  Exports
  */
 exports.login = login;
-exports.users = users;
-exports.user = user;
+exports.list_users = list_users;
+exports.edit_user = edit_user;
