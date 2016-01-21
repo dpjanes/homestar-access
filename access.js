@@ -25,8 +25,6 @@
 var iotdb = require('iotdb');
 var _ = iotdb._;
 
-var index = require('./index');
-
 /**
  *  Users are redirected to this page when not logged in
  */
@@ -38,15 +36,13 @@ var login = function(request, response, locals, done) {
  *  List users
  */
 var list_users = function(request, response, locals, done) {
-    var homestar = require('./index').homestar;
-
     if (!request.user.is_owner) {
         return done(new Error("only the Owner can list users"));
     }
 
     locals.users = [];
 
-    homestar.users.users(function(error, user) {
+    locals.homestar.users.users(function(error, user) {
         if (error) {
             locals.users.sort(function(a, b) {
                 if (a.username < b.username) {
@@ -79,15 +75,13 @@ var _map_group = function(group) {
  *  Edit one user
  */
 var edit_user = function(request, response, locals, done) {
-    var homestar = index.homestar;
-
     if (!request.user.is_owner) {
         return done(new Error("only the Owner can edit users"));
     }
 
     locals.user_id = request.params.user_id;
 
-    homestar.users.user_by_id(locals.user_id, function(error, user) {
+    locals.homestar.users.user_by_id(locals.user_id, function(error, user) {
         if (error) {
             return done(error);
         } else if (!user) {
@@ -95,8 +89,8 @@ var edit_user = function(request, response, locals, done) {
         }
 
         locals.edit_user = user;
-        locals.user_groups = _.ld.list(user, 'iot:access.group', homestar.data.default_groups());
-        locals.groups = _.map(homestar.data.groups(), _map_group, locals.user_groups);
+        locals.user_groups = _.ld.list(user, 'iot:access.group', locals.homestar.data.default_groups());
+        locals.groups = _.map(locals.homestar.data.groups(), _map_group, locals.user_groups);
 
         if (request.method === "POST") {
             var updated = {};
@@ -116,7 +110,7 @@ var edit_user = function(request, response, locals, done) {
             if (!_.is.Empty(updated)) {
                 _.extend(user, updated);
 
-                homestar.users.update(user, function(error) {
+                locals.homestar.users.update(user, function(error) {
                     if (error) {
                         return done(error);
                     } else {

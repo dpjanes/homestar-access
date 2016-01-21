@@ -29,44 +29,41 @@ var path = require('path');
 
 var access = require("./access");
 
-exports.homestar = null;
-exports.web = {
-    setup: function(app, homestar) {
-        exports.homestar = homestar;
+exports.homestar = {
+    setup_app: function(locals, app) {
+        /* settings */
+        locals.admin_editor = true;
+        locals.access_editor = true;
 
         /* force logins */
-        _.d.set(homestar.settings, "/webserver/require_login", true);
-        _.d.set(homestar.settings, "/urls/login", "/admin/log/in");
-        _.d.set(homestar.settings, "/urls/userid", "/admin/");
+        _.d.set(locals.homestar.settings, "/webserver/require_login", true);
+        _.d.set(locals.homestar.settings, "/urls/login", "/admin/log/in");
+        _.d.set(locals.homestar.settings, "/urls/userid", "/admin/");
 
-        app.get("/admin/log/in", homestar.make_dynamic({
+        app.get("/admin/log/in", locals.homestar.make_dynamic({
             template: path.join(__dirname, "dynamic/login.html"),
             customize: access.login,
             require_login: false,
         }));
-        app.get("/admin", homestar.make_dynamic({
+        app.get("/admin", locals.homestar.make_dynamic({
             template: path.join(__dirname, "dynamic/admin.html"),
             customize: access.login,
             require_login: true,
         }));
-        app.get("/admin/users/:user_id", homestar.make_dynamic({
+        app.get("/admin/users/:user_id", locals.homestar.make_dynamic({
             template: path.join(__dirname, "dynamic/edit_user.html"),
             require_login: true,
             customize: access.edit_user,
         }));
-        app.post("/admin/users/:user_id", homestar.make_dynamic({
+        app.post("/admin/users/:user_id", locals.homestar.make_dynamic({
             template: path.join(__dirname, "dynamic/edit_user.html"),
             require_login: true,
             customize: access.edit_user,
         }));
-        app.get("/admin/users", homestar.make_dynamic({
+        app.get("/admin/users", locals.homestar.make_dynamic({
             template: path.join(__dirname, "dynamic/users.html"),
             customize: access.list_users,
             require_login: true,
         }));
-    },
-    locals: {
-        admin_editor: true,
-        access_editor: true,
     },
 }
