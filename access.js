@@ -103,7 +103,7 @@ var edit_user = function(request, response, locals, done) {
              */
 
             var new_groups = _.ld.list(request.body, 'iot:access.group', []);
-            if (!_.equals(locals.user_groups, new_groups)) {
+            if (!_.is.Equal(locals.user_groups, new_groups)) {
                 updated['iot:access.group'] = new_groups;
             }
 
