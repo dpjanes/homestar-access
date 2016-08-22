@@ -6,12 +6,12 @@ HomeStar Access Control Module
 This module allows you to specify who can use your 
 various Things and Cookbooks.
 
-# Installation
+# Installation 
 
-Install Home☆Star first. 
-See: https://github.com/dpjanes/iotdb-homestar#installation
+* [Read this first](https://github.com/dpjanes/node-iotdb/blob/master/docs/install.md)
+* [Read about installing Home☆Star](https://github.com/dpjanes/node-iotdb/blob/master/docs/homestar.md) 
 
-Then
-
-    $ homestar install homestar-access
+    $ npm install -g homestar    ## may require sudo
+    $ homestar setup
+    $ npm install homestar-access
 
