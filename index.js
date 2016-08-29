@@ -67,3 +67,5 @@ exports.homestar = {
         }));
     },
 }
+
+exports.module_folder = __dirname;
